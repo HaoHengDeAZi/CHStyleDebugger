@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
 打开软件后，加载成功会在右下角出现图标。右上角出现面板。
 
-![image-20230826101559481](.\Screens\1.png)
+![image-20230826101559481](./Screens/1.png)
 
 
 
@@ -89,11 +89,11 @@ int main(int argc, char *argv[])
 
    Qt窗口获取焦点的情况下，通过Crtl+B（或者点击面板的“查找对象”），然后点击想查找的对象，出现菜单即可。
 
-   ![image-20230826102618682](.\Screens\2.png)
+   ![image-20230826102618682](./Screens/2.png)
 
 2. 属性操作
 
-   ![3](.\Screens\3.gif)
+   ![3](./Screens/3.gif)
 
    查找对象->选择对象->实时修改属性并预览。
 
@@ -105,13 +105,13 @@ int main(int argc, char *argv[])
 
    设置->美化面板设置->加入qss文件->**按照项目调整qss加载顺序**->保存
 
-![4](.\Screens\4.png)
+![4](./Screens/4.png)
 
-![image-20230826104307158](.\Screens\5.png)
+![image-20230826104307158](./Screens/5.png)
 
 b) 使用美化面板
 
-![6](.\Screens\6.gif)
+![6](./Screens/6.gif)
 
 
 
