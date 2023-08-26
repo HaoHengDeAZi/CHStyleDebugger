@@ -1,0 +1,479 @@
+﻿/*字体*/
+QWidget
+{
+    padding: 0px;
+    font-family: "Microsoft YaHei";
+    background-color: #FFFFFF;
+}
+
+/*焦点虚线框*/
+QWidget:focus
+{
+    outline: none;
+}
+
+/*框架*/
+QFrame
+{
+    padding: 0px;
+    border: 0px;
+    background-color: #FFFFFF;
+}
+
+/*水平分隔线*/
+QFrame[frameShape="4"]
+{
+    min-height: 1px;
+    max-height: 1px;
+    background-color: #EBEBEB;
+    border: 0px;
+}
+
+/*垂直分隔线*/
+QFrame[frameShape="5"]
+{
+    min-width: 1px;
+    max-width: 1px;
+    background-color: #CCCCCC;
+    border: 0px;
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+CHBaseDialog QPushButton[buttonSize="medium"]
+{
+    width: 78px;
+    height: 30px;
+}
+
+/*菜单*/
+QMenu
+{
+    color: #4D4D4D;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    font-size: 14px;
+    padding: 0px;
+}
+
+QMenu::separator
+{
+    height: 1px;
+    background-color: #CCCCCC;
+}
+
+QMenu::item
+{
+    border: 0px;
+    margin: 0px;
+    max-height: 20px;
+    height: 20px;
+    min-height: 20px;
+    padding: 0px;
+}
+
+QMenu::item:!enabled
+{
+    color: #CCCCCC;
+}
+
+QMenu::item:enabled:selected
+{
+    color: #FFFFFF;
+    background-color: #008FFF;
+}
+
+/*对话框主窗口*/
+QWidget#wDlgMain
+{
+    background-color: transparent;
+    border-image: url(:/Image/Dialog/弹框阴影.png) 30 30 30 30 stretch stretch;
+    border-width: 30px;
+    border: 1px solid #000000;
+}
+
+/*对话框主背景*/
+QFrame#frmDlgBackground
+{
+    background-color: transparent;
+    border: 0px;
+    margin: 0px;
+}
+
+/*对话框标题栏*/
+QFrame#frmDlgTitleBar
+{
+    min-height: 40px;
+    max-height: 40px;
+    background-color: #008FFF;
+    border: 0px;
+    padding: 0px 8px 0px 12px;
+}
+
+/*对话框功能区*/
+QFrame#frmDlgFunctionArea
+{
+    background-color: #FFFFFF;
+    border: 0px;
+    margin: 0px;
+}
+
+/*对话框标题*/
+QLabel#lblDlgTitle
+{
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    background-color: #008FFF;
+}
+
+/*最小化按钮*/
+QPushButton#btnDlgMin
+{
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    background-image: url(:/Image/Dialog/弹框小按钮_最小化_normal.png);
+    background-repeat: none;
+    background-position: center;
+    border: 0px;
+    border-radius: 0px;
+}
+
+QPushButton#btnDlgMin:hover
+{
+    background-color: #1168D9;
+}
+
+QPushButton#btnDlgMin:pressed
+{
+    background-color: #105DC2;
+}
+
+/*最大化按钮*/
+QPushButton#btnDlgMax
+{
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    background-image: url(:/Image/Dialog/弹框小按钮_最大化_normal.png);
+    background-repeat: none;
+    background-position: center;
+    border: 0px;
+    border-radius: 0px;
+}
+
+QPushButton#btnDlgMax:hover
+{
+    background-color: #1168D9;
+}
+
+QPushButton#btnDlgMax:pressed
+{
+    background-color: #105DC2;
+}
+
+/*关闭按钮*/
+QPushButton#btnDlgClose
+{
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    background-image: url(:/Image/Dialog/弹框小按钮_关闭_normal.png);
+    background-repeat: none;
+    background-position: center;
+    border: 0px;
+    border-radius: 0px;
+}
+
+QPushButton#btnDlgClose:hover
+{
+    background-color: #1168D9;
+}
+
+QPushButton#btnDlgClose:pressed
+{
+    background-color: #105DC2;
+}
+
+/****************************************************************************************************/
+
+/*消息对话框*/
+QLabel#lblMsgText
+{
+    font-size: 16px;
+}
+
+/****************************************************************************************************/
+
+/*消息提示框*/
+QWidget#wMessageToast
+{
+    min-height: 60px;
+    max-height: 60px;
+    background-color: rgba(0, 0, 0, 60%);
+    border: 0px;
+    border-radius: 5px;
+}
+
+QLabel#lblToastText
+{
+    color: #FFFFFF;
+    font-size: 16px;
+    background-color: transparent;
+}
+
+QLabel#lblToastIcon
+{
+    background-color: transparent;
+}
+/****************************************************************************************************/
+
+/*进度对话框*/
+QLabel#lblProgressMovieText
+{
+    font-size: 16px;
+}
+
+QPushButton#btnAddFile, QPushButton#btnDeleteFile, QPushButton#btnUpFile, QPushButton#btnDownFile
+{
+    min-width: 30px;
+    max-width: 30px;
+    width: 30px;
+}
+
+/*属性面板*/
+QLabel#lblPropertyTip
+{
+    background-color: #A0A0A0;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: bold;
+    min-height: 34px;
+    height: 34px;
+    max-height: 34px;
+}
+
+CPropertyPanel QWidget#wPropertyTitle
+{
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #A0A0A0;
+}
+
+StyleDebugger QPushButton#btnProperty, 
+StyleDebugger QPushButton#btnSelectObject, 
+StyleDebugger QPushButton#btnSettings, 
+StyleDebugger QPushButton#btnStyleSheet
+{
+    background-color: #1D253A;
+    min-height: 40px;
+    color: #FFFFFF;
+    border: 0px;
+    border-radius: 0px;
+}
+
+StyleDebugger QPushButton#btnProperty::hover, 
+StyleDebugger QPushButton#btnSelectObject::hover, 
+StyleDebugger QPushButton#btnSettings::hover, 
+StyleDebugger QPushButton#btnStyleSheet::hover
+{
+    background-color: #1D253A;
+    min-height: 38px;
+    color: #FFFFFF;
+    border: 0px;
+    border-radius: 0px;
+}
+
+
+StyleDebugger QPushButton#btnProperty::pressed, 
+StyleDebugger QPushButton#btnSelectObject::pressed, 
+StyleDebugger QPushButton#btnSettings::pressed, 
+StyleDebugger QPushButton#btnStyleSheet::pressed
+{
+    background-color: #1D253A;
+    min-height: 38px;
+    color: #FFFFFF;
+    border: 0px;
+    border-radius: 0px;
+}
+
+StyleDebugger QPushButton#btnProperty:checked, 
+StyleDebugger QPushButton#btnSelectObject:checked, 
+StyleDebugger QPushButton#btnSettings:checked, 
+StyleDebugger QPushButton#btnStyleSheet:checked
+{
+    background-color: #999999;
+}
+
+StyleDebugger QPushButton#btnProperty:unchecked, 
+StyleDebugger QPushButton#btnSelectObject:unchecked,
+StyleDebugger QPushButton#btnSettings:unchecked, 
+StyleDebugger QPushButton#btnStyleSheet:unchecked
+{
+    background-color: #1D253A;
+}
+
+QLabel#lblDlgIcon
+{
+    max-width: 24px;
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    min-height: 24px;
+    max-height: 24px;
+    border-image: url(:/Image/icon_sd.png);
+    background-color: transparent;
+}
+
+StyleDebugger QPushButton#btnProperty
+{
+    qproperty-icon: url(:/Image/EditProperty.png)
+}
+
+StyleDebugger QPushButton#btnSelectObject
+{
+    qproperty-icon: url(:/Image/Search.png)
+}
+
+StyleDebugger QPushButton#btnSettings
+{
+    qproperty-icon: url(:/Image/Settings.png)
+}
+
+StyleDebugger QPushButton#btnStyleSheet
+{
+    qproperty-icon: url(:/Image/Shirt.png)
+}
+/*属性选择*/
+QPushButton#listWidgetBgButton
+{
+    height: 28px;
+    min-height: 26px;
+    border: 0px;
+}
+QPushButton#listWidgetBgButton QLabel
+{
+    background-color: transparent;
+    max-width: 220px;
+    min-width: 220px;
+}
+
+QPushButton#listWidgetBgButton QPushButton
+{
+    max-width: 24px;
+    min-width: 24px;
+    width: 24px;
+    height: 24px;
+    max-height: 24px;
+    min-height: 24px;
+    border: 0px;
+    background-color: transparent;
+}
+
+QPushButton#listWidgetBgButton QPushButton::hover
+{
+    border: 0px;
+    background-color: transparent;
+}
+
+QPushButton#listWidgetBgButton QPushButton::pressed
+{
+    border: 0px;
+    background-color: transparent;
+}
+
+QPushButton#listWidgetBgButton QPushButton#copyClassInfo
+{
+    background-image: url(:/Image/copy.png);
+}
+
+QPushButton#listWidgetBgButton QPushButton#copyClassInfo::hover
+{
+    background-image: url(:/Image/copy.png);
+}
+
+QPushButton#listWidgetBgButton QPushButton#copyClassInfo::pressed
+{
+    background-image: url(:/Image/copy.png);
+}
+
+QPushButton#listWidgetBgButton QPushButton::pressed
+{
+    border: 0px;
+    background-color: transparent;
+}
+
+QPushButton#listWidgetBgButton QPushButton#menuButton
+{
+    background-image: url(:/Image/right.png);
+}
+
+QPushButton#listWidgetBgButton QPushButton#menuButton::hover
+{
+    background-image: url(:/Image/right.png);
+}
+
+QPushButton#listWidgetBgButton QPushButton#menuButton::pressed
+{
+    background-image: url(:/Image/right.png);
+}
+
+ObjectInfoMenu QWidget#wObjectTitle
+{
+    height: 26px;
+    max-height: 26px;
+    min-height: 26px;
+    background-color: #A0A0A0;
+}
+
+ObjectInfoMenu QLabel#lblClassName, QLabel#lblObjectName
+{
+    background-color: transparent;
+    color: #FFFFFF;
+}
+
+ObjectInfoMenu QLabel#lblObjectName
+{
+    max-width: 240px;
+}
+
+/*关于*/
+About QLabel#lblAppIcon
+{
+    width: 183px;
+    height: 229px;
+    min-width: 183px;
+    max-width: 183px;
+    min-height: 229px;
+    max-height: 229px;
+    background-image: url(:/Image/meimei.png);
+}
+
+About QLabel#lblAppName, QLabel#lblAppCnName
+{
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/*美化面板设置*/
+
+QssEditorSettings QGroupBox
+{
+    font-weight: normal;
+    font-size: 12px;
+    123
+}
+
+QssEditorSettings QLabel#lblNoteScale, QssEditorSettings QLabel#lblNoteAutoRefresh
+{
+    background-color: #F2F2F2;
+    color: #868686;
+    
+}
+
+QPushButton#pushButton_5
+{
+    background-color: #FF0000;
+    margin-left: 40px;
+    color: #FFFFFF;
+}
