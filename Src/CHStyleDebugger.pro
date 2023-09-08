@@ -179,6 +179,7 @@ HEADERS += \
     Settings/SoftwareSettings.h \
     Settings/QssEditorSettings.h \
     Settings/About.h
+
 DISTFILES += CHStyleDebugger.json \
     qscintilla/include/Scintilla.iface \
     qscintilla/lexlib/License.txt \
@@ -221,7 +222,7 @@ RESOURCES += \
     Resources/Image.qrc \
     Resources/Qss.qrc
 
-INCLUDEPATH += $PWD/Include
+INCLUDEPATH += $$PWD/../Include
 INCLUDEPATH += $$_PRO_FILE_PWD_/qscintilla $$_PRO_FILE_PWD_/qscintilla/include $$_PRO_FILE_PWD_/qscintilla/lexlib $$_PRO_FILE_PWD_/qscintilla/Qt4Qt5 $$_PRO_FILE_PWD_/qscintilla/src
 DEFINES += SCINTILLA_QT SCI_LEXER
 

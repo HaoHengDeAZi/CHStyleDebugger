@@ -1,9 +1,10 @@
 ﻿/*字体*/
-QWidget
+QWidget QLabel
 {
     padding: 0px;
     font-family: "Microsoft YaHei";
     background-color: #FFFFFF;
+    color: #333333;
 }
 
 /*焦点虚线框*/
@@ -54,6 +55,7 @@ QMenu
     border: 1px solid #CCCCCC;
     font-size: 14px;
     padding: 0px;
+    margin: 0px;
 }
 
 QMenu::separator
