@@ -42,7 +42,7 @@ void ObjectInfoMenu::addWidget(QWidget* widget)
     {
         strObjectName = tr("未定义");
     }
-    QListWidgetItem* item = new QListWidgetItem(strObjectName);
+    QListWidgetItem* item = new QListWidgetItem();
     ui->lswClassInfo->addItem(item);
 
     CHPushButton* itemWidget = new CHPushButton(ui->lswClassInfo);

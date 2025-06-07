@@ -463,7 +463,6 @@ QssEditorSettings QGroupBox
 {
     font-weight: normal;
     font-size: 12px;
-    123
 }
 
 QssEditorSettings QLabel#lblNoteScale, QssEditorSettings QLabel#lblNoteAutoRefresh
