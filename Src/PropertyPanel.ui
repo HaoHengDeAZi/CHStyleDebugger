@@ -91,12 +91,38 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btnAdjustSize">
+           <widget class="QCheckBox" name="chbObjectVisible">
             <property name="toolTip">
-             <string>调整大小之后，有时需要调整一下窗口，否则布局很奇怪</string>
+             <string>对象框是否可见</string>
             </property>
             <property name="text">
-             <string>自适应大小</string>
+             <string>对象框</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnRefreshList">
+            <property name="maximumSize">
+             <size>
+              <width>24</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="toolTip">
+             <string>刷新列表</string>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnAdjustSize">
+            <property name="toolTip">
+             <string>自适应大小！调整大小之后，有时需要调整一下窗口，否则布局很奇怪</string>
+            </property>
+            <property name="text">
+             <string>自适应</string>
             </property>
            </widget>
           </item>
@@ -120,7 +146,7 @@
             <x>0</x>
             <y>0</y>
             <width>433</width>
-            <height>346</height>
+            <height>334</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="vlayPropery">

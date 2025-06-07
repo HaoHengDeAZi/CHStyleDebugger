@@ -133,11 +133,14 @@ ST_CONFIG AppContext::settings(bool refresh)
 
     m_softwareConfig.objectBorderColor = settings.value("Config/objectBorderColor", "#FF3399").toString();
     m_softwareConfig.objectBorderWidth = settings.value("Config/objectBorderWidth", 1).toInt();
+    m_softwareConfig.objectBorderVisible = settings.value("Config/objectBorderVisible", true).toBool();
     m_softwareConfig.objectKeyShortcut = settings.value("Config/objectKeyShortcut", "CTRL+B").toString();
 
     m_softwareConfig.showTrayIcon = settings.value("Config/showTrayIcon", true).toBool();
-    m_softwareConfig.showMainWindow = settings.value("Config/showMainWindow", true).toBool();
+    m_softwareConfig.showMainWindow = settings.value("Config/showMainWindow", false).toBool();
 
+    m_softwareConfig.showMainFps = settings.value("Config/showMainFps", true).toBool();
+    m_softwareConfig.showSelectFps = settings.value("Config/showSelectFps", true).toBool();
     return m_softwareConfig;
 }
 
@@ -156,10 +159,12 @@ void AppContext::setSettings(const ST_CONFIG& config)
     settings.setValue("Config/qssEditorShortcut", config.qssEditorShortcut);
     settings.setValue("Config/objectBorderColor", config.objectBorderColor.name());
     settings.setValue("Config/objectBorderWidth", config.objectBorderWidth);
+    settings.setValue("Config/objectBorderVisible", config.objectBorderVisible);
     settings.setValue("Config/objectKeyShortcut", config.objectKeyShortcut);
     settings.setValue("Config/showTrayIcon", config.showTrayIcon);
     settings.setValue("Config/showMainWindow", config.showMainWindow);
-
+    settings.setValue("Config/showMainFps", config.showMainFps);
+    settings.setValue("Config/showSelectFps", config.showSelectFps);
     m_softwareConfig = config;
 
     Q_EMIT updateSettings();
@@ -212,6 +217,14 @@ void AppContext::setStyleSheet(const QString& styleSheet)
     {
         m_customStyleSheet(styleSheet);
     }
+}
+
+void AppContext::setFpsValue(int mainFps, int selectFps)
+{
+    if (!m_pStyleDebugger) {
+        return;
+    }
+    m_pStyleDebugger->setFpsValue(mainFps, selectFps);
 }
 
 //事件过滤

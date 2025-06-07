@@ -43,6 +43,7 @@ void ObjectInfoMenu::addWidget(QWidget* widget)
         strObjectName = tr("未定义");
     }
     QListWidgetItem* item = new QListWidgetItem();
+    item->setSizeHint(QSize(100, 36));
     ui->lswClassInfo->addItem(item);
 
     CHPushButton* itemWidget = new CHPushButton(ui->lswClassInfo);
@@ -92,7 +93,7 @@ void ObjectInfoMenu::addWidget(QWidget* widget)
     });
 
     QLabel* className = new QLabel(strClassName, itemWidget);
-    className->setText(fontMatrics.elidedText(strClassName, Qt::ElideMiddle, className->width()));
+    className->setText(fontMatrics.elidedText(strClassName, Qt::ElideMiddle, 220));
     itemWidget->layout()->addWidget(className);
     QPushButton* copyClass = new QPushButton(itemWidget);
     copyClass->setObjectName("copyClassInfo");
@@ -146,7 +147,7 @@ void ObjectInfoMenu::clear()
 QWidget* ObjectInfoMenu::exec(const QPoint& p)
 {
     QPoint adjust = p;
-    QSize s = qApp->primaryScreen()->availableVirtualSize();
+    QSize s = qApp->primaryScreen()->availableSize();
     if (p.x() + width() > s.width())
     {
         adjust.setX(p.x() - width());

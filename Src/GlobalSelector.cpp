@@ -3,6 +3,7 @@
 #include <QWidget>
 #include <QClipboard>
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QMouseEvent>
 #include <QApplication>
 #include "GlobalSelector.h"
@@ -12,6 +13,8 @@
 #include "Resources.h"
 #include "AppContext.h"
 #include <QLabel>
+#include <QElapsedTimer>
+#include <QPainter>
 #include "ObjectInfoMenu.h"
 
 class CGlobalSelectorPrivate
@@ -42,6 +45,23 @@ public:
         m_pObjectMenu->setObjectName("objectMenu");
 
         m_bSelectEnabled = false;
+        m_fpsTimer.start();
+
+        m_updateTimer = new QTimer(parent);
+        QObject::connect(m_updateTimer, &QTimer::timeout, parent, [=](){
+            if (m_fpsTimer.elapsed() >= 1000) {
+                m_fpsTimer.restart();
+                updateFps();
+                m_mainFpsCount = 0;
+                m_selectFpsCount = 0;
+            }
+        });
+        m_updateTimer->setInterval(10);
+        m_updateTimer->start();
+    }
+
+    void updateFps() {
+        appContext->setFpsValue(m_mainFpsCount, m_selectFpsCount);
     }
 
     ~CGlobalSelectorPrivate()
@@ -59,6 +79,11 @@ public:
     ObjectInfoMenu* m_pObjectMenu;
     QList<QWidget*> m_widgets;
     bool m_bSelectEnabled;
+
+    QElapsedTimer m_fpsTimer;
+    int m_mainFpsCount = 0;
+    int m_selectFpsCount = 0;
+    QTimer* m_updateTimer;
 };
 
 CGlobalSelector::CGlobalSelector(QObject *parent) : QObject(parent)
@@ -72,6 +97,10 @@ CGlobalSelector::CGlobalSelector(QObject *parent) : QObject(parent)
             return;
         }
 
+        if (m_p->m_bSelectEnabled || m_p->m_pObjectMenu->isVisible()) {
+            return;
+        }
+
         QWidget* pWidget = qobject_cast<QWidget*>(m_p->m_pLastObj);
         if (pWidget != Q_NULLPTR)
         {
@@ -81,7 +110,7 @@ CGlobalSelector::CGlobalSelector(QObject *parent) : QObject(parent)
                 pRootParent = pRootParent->parentWidget();
             }
 
-            if (pWidget->isVisible() && !pRootParent->isMinimized())
+            if (pWidget->isVisible() && !pRootParent->isMinimized() && appContext->settings().objectBorderVisible)
             {
                 m_p->m_pHighlight->move(pWidget->mapToGlobal(QPoint(0, 0)));
                 m_p->m_pHighlight->setFixedSize(pWidget->size());
@@ -94,9 +123,9 @@ CGlobalSelector::CGlobalSelector(QObject *parent) : QObject(parent)
         }
     });
 
-    connect(m_p->m_pObjectMenu, &ObjectInfoMenu::selectedWidget, this, [this](QWidget* widgetItem)
+    connect(m_p->m_pObjectMenu, &ObjectInfoMenu::selectedWidget, this, [this](QPointer<QWidget> widgetItem)
     {
-        if (widgetItem != Q_NULLPTR)
+        if (!widgetItem.isNull())
         {
             m_p->m_pLastObj = widgetItem;
             m_p->m_pHighlight->hide();
@@ -110,9 +139,9 @@ CGlobalSelector::CGlobalSelector(QObject *parent) : QObject(parent)
         }
     });
 
-    connect(m_p->m_pObjectMenu, &ObjectInfoMenu::hoveredWidget, this, [this](QWidget* widgetItem)
+    connect(m_p->m_pObjectMenu, &ObjectInfoMenu::hoveredWidget, this, [this](QPointer<QWidget> widgetItem)
     {
-        if (widgetItem != Q_NULLPTR)
+        if (!widgetItem.isNull())
         {
             m_p->m_pMoveTimer->start();
             m_p->m_pLastObj = widgetItem;
@@ -227,7 +256,7 @@ bool CGlobalSelector::eventFilter(QObject *obj, QEvent *event)
                 QString strObjectName = pWidget->objectName();
                 if (strObjectName.isEmpty())
                 {
-                    strObjectName = "undefined";
+                    strObjectName = tr("未定义");
                 }
                 QString strClassInfo = QString("%1(%2)").arg(strObjectName).arg(strClassName);
                 lsObjects.append(strClassInfo);
@@ -265,5 +294,26 @@ bool CGlobalSelector::eventFilter(QObject *obj, QEvent *event)
         }
     } while (0);
 
+    // FPS
+    if (event->type() == QEvent::Paint) {
+        QString className = obj->metaObject()->className();
+        if (obj->parent() == Q_NULLPTR && (obj->inherits("QMainWindow") || className.contains("MainWindow"))) {
+            m_p->m_mainFpsCount++;
+        }
+
+        bool isContainObj = false;
+        auto objectParent = obj;
+        do {
+            if (objectParent == m_p->m_pLastObj) {
+                isContainObj = true;
+                break;
+            }
+            objectParent = objectParent->parent();
+        } while (objectParent);
+
+        if (isContainObj) {
+            m_p->m_selectFpsCount++;
+        }
+    }
     return QObject::eventFilter(obj, event);
 }

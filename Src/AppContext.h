@@ -9,6 +9,8 @@
 #include <QColor>
 #include <QMutex>
 #include <QObject>
+#include <QPointer>
+#include <QSystemTrayIcon>
 
 #define appContext AppContext::getInstance()
 
@@ -30,10 +32,14 @@ typedef struct st_config
 
     QColor objectBorderColor;
     int objectBorderWidth;
+    bool objectBorderVisible;
     QString objectKeyShortcut;
 
     bool showTrayIcon;
     bool showMainWindow;
+
+    bool showMainFps;
+    bool showSelectFps;
 
     st_config()
     {
@@ -48,9 +54,12 @@ typedef struct st_config
         qssEditorShortcut = "ALT+3";
         objectBorderColor = QColor("#FF3399");
         objectBorderWidth = 1;
+        objectBorderVisible = true;
         objectKeyShortcut = "CTRL+B";
         showTrayIcon = true;
         showMainWindow = true;
+        showMainFps = true;
+        showSelectFps = true;
     }
 } ST_CONFIG;
 
@@ -102,6 +111,9 @@ public:
     //自定义式样函数
     void setCustomStyleSheetFunction(void (*f)(const QString& styleSheet));
     void setStyleSheet(const QString& styleSheet);
+
+    // 设置fps
+    void setFpsValue(int mainFps, int selectFps);
 
 Q_SIGNALS:
     //更新Qss内容

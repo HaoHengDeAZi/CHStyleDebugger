@@ -108,3 +108,22 @@ QMargins string2Margins(QString str)
     value = QMargins(ls.at(0).toInt(), ls.at(1).toInt(), ls.at(2).toInt(), ls.at(3).toInt());
     return value;
 }
+
+
+QString color2String(QColor color)
+{
+    QString str("%1,%2,%3,%4");
+    return str.arg(color.red()).arg(color.green()).arg(color.blue()).arg(color.alpha());
+}
+
+QColor string2Color(QString str)
+{
+    QColor value;
+    QStringList ls = str.remove("(").remove(")").remove(" ").split(",");
+    if (ls.length() != 4)
+    {
+        return value;
+    }
+    value = QColor(ls.at(0).toInt(), ls.at(1).toInt(), ls.at(2).toInt(), ls.at(3).toInt());
+    return value;
+}

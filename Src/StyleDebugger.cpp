@@ -21,10 +21,11 @@ StyleDebugger::StyleDebugger(QWidget *parent) :
     ui(new Ui::StyleDebugger),
     m_hasMove(false),
     m_QssEditorHasMove(false),
+#ifdef QSCINTILLA
     m_pQssEditor(Q_NULLPTR),
+#endif
     m_pPropertyPanel(Q_NULLPTR),
-    m_pGlobalSelector(Q_NULLPTR),
-    m_trayIcon(Q_NULLPTR)
+    m_pGlobalSelector(Q_NULLPTR)
 {
     ui->setupUi(getFunctionWidget());
 
@@ -35,6 +36,19 @@ StyleDebugger::StyleDebugger(QWidget *parent) :
 StyleDebugger::~StyleDebugger()
 {
     delete ui;
+}
+
+void StyleDebugger::setFpsValue(int mainFps, int selectFps)
+{
+    if (!appContext->settings().showMainFps && !appContext->settings().showSelectFps) {
+        ui->FpsWidget->hide();
+        setFixedHeight(80);
+        return;
+    }
+    setFixedHeight(100);
+    ui->FpsWidget->show();
+    ui->lblMainFps->setText(QString::number(mainFps));
+    ui->lblSelectFps->setText(QString::number(selectFps));
 }
 
 void StyleDebugger::toggleQssEditorVisible()
@@ -49,6 +63,7 @@ void StyleDebugger::toggleQssEditorVisible()
             return;
         }
     }
+#ifdef QSCINTILLA
     m_pQssEditor->setVisible(!m_pQssEditor->isVisible());
     ui->btnStyleSheet->setChecked(m_pQssEditor->isVisible());
     if (m_pQssEditor->isVisible())
@@ -63,11 +78,12 @@ void StyleDebugger::toggleQssEditorVisible()
             m_QssEditorHasMove = true;
         }
     }
+#endif
 }
 
 void StyleDebugger::togglePropertyPanelVisible()
 {
-    if (m_pPropertyPanel->objectWidget() == Q_NULLPTR)
+    if (!m_pPropertyPanel.isNull() && m_pPropertyPanel->objectWidget() == Q_NULLPTR)
     {
         CHMessageToast::warning(this, tr("请先选择对象"));
         selectObject(true);
@@ -123,18 +139,20 @@ void StyleDebugger::initWidget()
     setTitle(tr("CHStyleDebugger"));
     setFixedHeight(80);
 
+#ifdef QSCINTILLA
     m_pQssEditor = new CQssEditor(Q_NULLPTR);
     connect(m_pQssEditor, &CQssEditor::visibleChanged, ui->btnStyleSheet, &QPushButton::setChecked);
-    m_pPropertyPanel = new CPropertyPanel(Q_NULLPTR);
-    connect(m_pPropertyPanel, &CPropertyPanel::visibleChanged, ui->btnProperty, &QPushButton::setChecked);
+#endif
+
     m_pGlobalSelector = new CGlobalSelector(this);
-    m_pGlobalSelector->setNotHandleEventList(QList<QWidget*>() << this << m_pPropertyPanel << m_pQssEditor);
-    connect(m_pGlobalSelector, &CGlobalSelector::selectedWidget, m_pPropertyPanel, [this](QWidget* w)
+    connect(m_pGlobalSelector, &CGlobalSelector::selectedWidget, this, [this](QWidget* w)
     {
+        resetPropertyPanel(w);
         m_pPropertyPanel->setWidget(w);
         m_pGlobalSelector->setSelectState(false);
         ui->btnProperty->setChecked(true);
     });
+
     connect(m_pGlobalSelector, &CGlobalSelector::selectStateChanged, ui->btnSelectObject, &QPushButton::setChecked);
 
     connect(ui->btnStyleSheet, &QPushButton::clicked, this, &StyleDebugger::toggleQssEditorVisible);
@@ -147,14 +165,16 @@ void StyleDebugger::initWidget()
         ST_CONFIG config = appContext->settings();
         setWindowOpacity(config.mainOpacity);
 
+#ifdef QSCINTILLA
         m_pQssEditor->setWindowFlag(Qt::WindowStaysOnTopHint, config.qssEditorTop);
-        m_pPropertyPanel->setWindowFlag(Qt::WindowStaysOnTopHint, config.propertyTop);
+#endif
+        //m_pPropertyPanel->setWindowFlag(Qt::WindowStaysOnTopHint, config.propertyTop);
         setWindowFlag(Qt::WindowStaysOnTopHint, config.mainTop);
 
         this->setVisible(config.showMainWindow);
         if (config.showTrayIcon)
         {
-            if (m_trayIcon == Q_NULLPTR)
+            if (m_trayIcon.isNull())
             {
                 // 初始化系统托盘图标
                 m_trayIcon = new QSystemTrayIcon(this);
@@ -164,21 +184,28 @@ void StyleDebugger::initWidget()
                 {
                     if (reason == QSystemTrayIcon::DoubleClick)
                     {
+                        if (m_trayIcon.isNull()) {
+                            return;
+                        }
                         this->show();
                         this->activateWindow();
                     }
                 });
                 connect(qGuiApp, &QGuiApplication::lastWindowClosed, this, [this]()
                 {
+                    if (m_trayIcon.isNull()) {
+                        return;
+                    }
+
                     m_trayIcon->hide();
                     m_trayIcon->deleteLater();
                 });
             }
 
             m_trayIcon->show();
-            m_trayIcon->showMessage(tr("提示"), tr("Hi~ 式样调试器已启动"), QSystemTrayIcon::Information, 3000);
+            //m_trayIcon->showMessage(tr("提示"), tr("Hi~ 式样调试器已启动"), QSystemTrayIcon::Information, 3000);
         }
-        else if (m_trayIcon != Q_NULLPTR)
+        else if (!m_trayIcon.isNull())
         {
             m_trayIcon->setVisible(config.showTrayIcon);
         }
@@ -222,4 +249,23 @@ void StyleDebugger::initSettings()
     menu->addAction(about);
 
     ui->btnSettings->setMenu(menu);
+}
+
+void StyleDebugger::resetPropertyPanel(QWidget* parentWidget)
+{
+    if (!m_pPropertyPanel.isNull()) {
+        m_pPropertyPanel->deleteLater();
+        m_pPropertyPanel.clear();
+    }
+    m_pPropertyPanel = new CPropertyPanel(parentWidget == Q_NULLPTR ? Q_NULLPTR : parentWidget->window());
+    connect(m_pPropertyPanel, &CPropertyPanel::visibleChanged, ui->btnProperty, &QPushButton::setChecked);
+    connect(m_pPropertyPanel, &CPropertyPanel::destroyed, ui->btnProperty, [=](){
+        ui->btnProperty->setChecked(false);
+    });
+
+#ifdef QSCINTILLA
+    m_pGlobalSelector->setNotHandleEventList(QList<QWidget*>() << this << m_pPropertyPanel << m_pQssEditor);
+#else
+    m_pGlobalSelector->setNotHandleEventList(QList<QWidget*>() << this << m_pPropertyPanel);
+#endif
 }

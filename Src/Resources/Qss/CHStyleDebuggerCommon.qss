@@ -13,6 +13,38 @@ QWidget:focus
     outline: none;
 }
 
+QLabel
+{
+    padding: 0px;
+    font-family: "Microsoft YaHei";
+    background-color: #FFFFFF;
+    color: #333333;
+}
+
+QLineEdit, QSpinBox ,QCheckBox
+{
+    background-color: #FFFFFF;
+    color: #333333;
+}
+
+QPushButton
+{
+    color: #333333;
+    background-color: #f2f2f0;
+}
+
+QPushButton:hover
+{
+    color: #333333;
+    background-color: #1168D9;
+}
+
+QPushButton:pressed
+{
+    color: #333333;
+    background-color: #105DC2;
+}
+
 /*框架*/
 QFrame
 {
@@ -39,6 +71,33 @@ QFrame[frameShape="5"]
     border: 0px;
     margin-top: 6px;
     margin-bottom: 6px;
+}
+
+QComboBox {
+  border: 1px solid #000000;
+  border-radius: 3px;
+  color: black;
+  background: #FFFFFF;
+}
+
+QComboBox QListView {
+  background-color: #FFFFFF;
+  border: 1px solid #000000;
+  selection-background-color: #33363c;
+  selection-color: black;
+  color: #333333;
+}
+
+QComboBox QListView::item {
+  background: #FFFFFF;
+}
+
+QComboBox QListView::item:selected {
+  background-color: #105DC2;
+}
+
+QComboBox QListView::item:hover {
+  background-color: #1168D9;
 }
 
 CHBaseDialog QPushButton[buttonSize="medium"]
@@ -72,6 +131,7 @@ QMenu::item
     height: 20px;
     min-height: 20px;
     padding: 0px;
+    color: #333333;
 }
 
 QMenu::item:!enabled
@@ -463,6 +523,7 @@ QssEditorSettings QGroupBox
 {
     font-weight: normal;
     font-size: 12px;
+    123
 }
 
 QssEditorSettings QLabel#lblNoteScale, QssEditorSettings QLabel#lblNoteAutoRefresh

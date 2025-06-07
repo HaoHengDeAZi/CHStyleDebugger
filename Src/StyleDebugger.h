@@ -7,6 +7,7 @@
 #define STYLEDEBUGGER_H
 
 #include <QWidget>
+#include <QPointer>
 #include "Components/CHBaseDialog.h"
 
 class QSystemTrayIcon;
@@ -27,6 +28,8 @@ public:
     StyleDebugger(QWidget *parent = nullptr);
     ~StyleDebugger();
 
+    void setFpsValue(int mainFps, int selectFps);
+
 public Q_SLOTS:
     void toggleQssEditorVisible();
     void togglePropertyPanelVisible();
@@ -39,6 +42,8 @@ private:
     void initWidget();
     void initSettings();
 
+    void resetPropertyPanel(QWidget* parentWidget);
+
 private:
     Ui::StyleDebugger *ui;
 
@@ -46,10 +51,10 @@ private:
     bool m_QssEditorHasMove;
 
     CQssEditor* m_pQssEditor;
-    CPropertyPanel* m_pPropertyPanel;
+    QPointer<CPropertyPanel> m_pPropertyPanel;
     CGlobalSelector* m_pGlobalSelector;
 
-    QSystemTrayIcon* m_trayIcon;
+    QPointer<QSystemTrayIcon> m_trayIcon;
 };
 
 #endif // STYLEDEBUGGER_H

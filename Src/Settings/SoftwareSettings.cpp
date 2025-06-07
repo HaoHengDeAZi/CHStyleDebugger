@@ -42,6 +42,9 @@ void SoftwareSettings::saveSettings()
     config.showTrayIcon = ui->cbTrayIcon->isChecked();
     config.showMainWindow = ui->cbMainWindow->isChecked();
 
+    config.showMainFps = ui->cbFpsMain->isChecked();
+    config.showSelectFps = ui->cbFpsSelect->isChecked();
+
     appContext->setSettings(config);
 
     accept();
@@ -77,6 +80,9 @@ void SoftwareSettings::initWidget()
 
     ui->cbTrayIcon->setChecked(config.showTrayIcon);
     ui->cbMainWindow->setChecked(config.showMainWindow);
+
+    ui->cbFpsMain->setChecked(config.showMainFps);
+    ui->cbFpsSelect->setChecked(config.showSelectFps);
 
     //初始化对象颜色
     auto refeshLine = [this](QColor color)

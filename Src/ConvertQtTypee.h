@@ -12,6 +12,7 @@
 #include <QPoint>
 #include <QSize>
 #include <QMargins>
+#include <QColor>
 
 QString rect2String(QRect rect);
 QString rectF2String(QRectF rect);
@@ -29,4 +30,6 @@ QSize string2Size(QString str);
 QString Margins2String(QMargins rect);
 QMargins string2Margins(QString str);
 
+QString color2String(QColor color);
+QColor string2Color(QString str);
 #endif // CONVERTQTTYPEE_H

@@ -1,6 +1,9 @@
 include(../CHComponents.pri)
 
 QT       += core gui widgets printsupport
+macx {
+    QT += macextras
+}
 
 TARGET = CHStyleDebugger
 TEMPLATE = lib
@@ -21,6 +24,7 @@ DEFINES += _MBCS
 DEFINES -= _UNICODE
 DEFINES -= UNICODE
 DEFINES += DEBUGGER_VERSION=$$VERSION
+#DEFINES += QSCINTILLA
 
 SOURCES += \
     Components/CHBaseDialog.cpp \
@@ -31,66 +35,8 @@ SOURCES += \
     GlobalSelector.cpp \
     ObjectInfoMenu.cpp \
     PropertyPanel.cpp \
-    QssEditor.cpp \
     AppContext.cpp \
     StyleDebugger.cpp \
-    qscintilla/lexers/LexCSS.cpp \
-    qscintilla/lexlib/Accessor.cpp \
-    qscintilla/lexlib/CharacterCategory.cpp \
-    qscintilla/lexlib/CharacterSet.cpp \
-    qscintilla/lexlib/LexerBase.cpp \
-    qscintilla/lexlib/LexerModule.cpp \
-    qscintilla/lexlib/LexerNoExceptions.cpp \
-    qscintilla/lexlib/LexerSimple.cpp \
-    qscintilla/lexlib/PropSetSimple.cpp \
-    qscintilla/lexlib/StyleContext.cpp \
-    qscintilla/lexlib/WordList.cpp \
-    qscintilla/Qt4Qt5/InputMethod.cpp \
-    qscintilla/Qt4Qt5/ListBoxQt.cpp \
-    qscintilla/Qt4Qt5/MacPasteboardMime.cpp \
-    qscintilla/Qt4Qt5/PlatQt.cpp \
-    qscintilla/Qt4Qt5/qsciabstractapis.cpp \
-    qscintilla/Qt4Qt5/qsciapis.cpp \
-    qscintilla/Qt4Qt5/qscicommand.cpp \
-    qscintilla/Qt4Qt5/qscicommandset.cpp \
-    qscintilla/Qt4Qt5/qscidocument.cpp \
-    qscintilla/Qt4Qt5/qscilexer.cpp \
-    qscintilla/Qt4Qt5/qscilexercss.cpp \
-    qscintilla/Qt4Qt5/qscilexercustom.cpp \
-    qscintilla/Qt4Qt5/qscimacro.cpp \
-    qscintilla/Qt4Qt5/qsciprinter.cpp \
-    qscintilla/Qt4Qt5/qsciscintilla.cpp \
-    qscintilla/Qt4Qt5/qsciscintillabase.cpp \
-    qscintilla/Qt4Qt5/qscistyle.cpp \
-    qscintilla/Qt4Qt5/qscistyledtext.cpp \
-    qscintilla/Qt4Qt5/SciClasses.cpp \
-    qscintilla/Qt4Qt5/ScintillaQt.cpp \
-    qscintilla/src/AutoComplete.cpp \
-    qscintilla/src/CallTip.cpp \
-    qscintilla/src/CaseConvert.cpp \
-    qscintilla/src/CaseFolder.cpp \
-    qscintilla/src/Catalogue.cpp \
-    qscintilla/src/CellBuffer.cpp \
-    qscintilla/src/CharClassify.cpp \
-    qscintilla/src/ContractionState.cpp \
-    qscintilla/src/Decoration.cpp \
-    qscintilla/src/Document.cpp \
-    qscintilla/src/Editor.cpp \
-    qscintilla/src/ExternalLexer.cpp \
-    qscintilla/src/Indicator.cpp \
-    qscintilla/src/KeyMap.cpp \
-    qscintilla/src/LineMarker.cpp \
-    qscintilla/src/PerLine.cpp \
-    qscintilla/src/PositionCache.cpp \
-    qscintilla/src/RESearch.cpp \
-    qscintilla/src/RunStyles.cpp \
-    qscintilla/src/ScintillaBase.cpp \
-    qscintilla/src/Selection.cpp \
-    qscintilla/src/Style.cpp \
-    qscintilla/src/UniConversion.cpp \
-    qscintilla/src/ViewStyle.cpp \
-    qscintilla/src/XPM.cpp \
-    qscilexerqss.cpp \
     Settings/SoftwareSettings.cpp \
     Settings/QssEditorSettings.cpp \
     Settings/About.cpp
@@ -104,10 +50,16 @@ HEADERS += \
     GlobalSelector.h \
     ObjectInfoMenu.h \
     PropertyPanel.h \
-    QssEditor.h \
     AppContext.h \
     Resources.h \
     StyleDebugger.h \
+    Settings/SoftwareSettings.h \
+    Settings/QssEditorSettings.h \
+    Settings/About.h
+
+contains(QSCINTILLA, DEFINES) {
+HEADERS += \
+    QssEditor.h \
     qscintilla/include/ILexer.h \
     qscintilla/include/Platform.h \
     qscintilla/include/SciLexer.h \
@@ -175,10 +127,68 @@ HEADERS += \
     qscintilla/src/UniConversion.h \
     qscintilla/src/ViewStyle.h \
     qscintilla/src/XPM.h \
-    qscilexerqss.h \
-    Settings/SoftwareSettings.h \
-    Settings/QssEditorSettings.h \
-    Settings/About.h
+    qscilexerqss.h
+
+SOURCES += \
+    QssEditor.cpp \
+    qscintilla/lexers/LexCSS.cpp \
+    qscintilla/lexlib/Accessor.cpp \
+    qscintilla/lexlib/CharacterCategory.cpp \
+    qscintilla/lexlib/CharacterSet.cpp \
+    qscintilla/lexlib/LexerBase.cpp \
+    qscintilla/lexlib/LexerModule.cpp \
+    qscintilla/lexlib/LexerNoExceptions.cpp \
+    qscintilla/lexlib/LexerSimple.cpp \
+    qscintilla/lexlib/PropSetSimple.cpp \
+    qscintilla/lexlib/StyleContext.cpp \
+    qscintilla/lexlib/WordList.cpp \
+    qscintilla/Qt4Qt5/InputMethod.cpp \
+    qscintilla/Qt4Qt5/ListBoxQt.cpp \
+    qscintilla/Qt4Qt5/MacPasteboardMime.cpp \
+    qscintilla/Qt4Qt5/PlatQt.cpp \
+    qscintilla/Qt4Qt5/qsciabstractapis.cpp \
+    qscintilla/Qt4Qt5/qsciapis.cpp \
+    qscintilla/Qt4Qt5/qscicommand.cpp \
+    qscintilla/Qt4Qt5/qscicommandset.cpp \
+    qscintilla/Qt4Qt5/qscidocument.cpp \
+    qscintilla/Qt4Qt5/qscilexer.cpp \
+    qscintilla/Qt4Qt5/qscilexercss.cpp \
+    qscintilla/Qt4Qt5/qscilexercustom.cpp \
+    qscintilla/Qt4Qt5/qscimacro.cpp \
+    qscintilla/Qt4Qt5/qsciprinter.cpp \
+    qscintilla/Qt4Qt5/qsciscintilla.cpp \
+    qscintilla/Qt4Qt5/qsciscintillabase.cpp \
+    qscintilla/Qt4Qt5/qscistyle.cpp \
+    qscintilla/Qt4Qt5/qscistyledtext.cpp \
+    qscintilla/Qt4Qt5/SciClasses.cpp \
+    qscintilla/Qt4Qt5/ScintillaQt.cpp \
+    qscintilla/src/AutoComplete.cpp \
+    qscintilla/src/CallTip.cpp \
+    qscintilla/src/CaseConvert.cpp \
+    qscintilla/src/CaseFolder.cpp \
+    qscintilla/src/Catalogue.cpp \
+    qscintilla/src/CellBuffer.cpp \
+    qscintilla/src/CharClassify.cpp \
+    qscintilla/src/ContractionState.cpp \
+    qscintilla/src/Decoration.cpp \
+    qscintilla/src/Document.cpp \
+    qscintilla/src/Editor.cpp \
+    qscintilla/src/ExternalLexer.cpp \
+    qscintilla/src/Indicator.cpp \
+    qscintilla/src/KeyMap.cpp \
+    qscintilla/src/LineMarker.cpp \
+    qscintilla/src/PerLine.cpp \
+    qscintilla/src/PositionCache.cpp \
+    qscintilla/src/RESearch.cpp \
+    qscintilla/src/RunStyles.cpp \
+    qscintilla/src/ScintillaBase.cpp \
+    qscintilla/src/Selection.cpp \
+    qscintilla/src/Style.cpp \
+    qscintilla/src/UniConversion.cpp \
+    qscintilla/src/ViewStyle.cpp \
+    qscintilla/src/XPM.cpp \
+    qscilexerqss.cpp
+}
 
 DISTFILES += CHStyleDebugger.json \
     qscintilla/include/Scintilla.iface \
@@ -214,9 +224,10 @@ FORMS += \
     Settings/QssEditorSettings.ui \
     Settings/About.ui
 
-#插件放在MyPlugins目录中
+#插件放在ChPlugins目录中
 DESTDIR = $$sprintf($$DESTDIR/ChPlugins)
 win32: DLLDESTDIR = $$sprintf($$DLLDESTDIR/ChPlugins)
+macx: DLLDESTDIR = $$sprintf($$DLLDESTDIR/ChPlugins)
 
 RESOURCES += \
     Resources/Image.qrc \
@@ -227,5 +238,14 @@ INCLUDEPATH += $$_PRO_FILE_PWD_/qscintilla $$_PRO_FILE_PWD_/qscintilla/include $
 DEFINES += SCINTILLA_QT SCI_LEXER
 
 #引入私有头文件
-INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtGui/$$[QT_VERSION]/ \
-    $$[QT_INSTALL_HEADERS]/QtCore/$$[QT_VERSION]/
+macx {
+    INCLUDEPATH += $$[QT_INSTALL_LIBS]/QtGui.framework/Headers/$$[QT_VERSION]/ \
+        $$[QT_INSTALL_LIBS]/QtCore.framework/Headers/$$[QT_VERSION]/
+}
+
+!macx {
+    INCLUDEPATH += $$[QT_INSTALL_HEADERS]/QtGui/$$[QT_VERSION]/ \
+        $$[QT_INSTALL_HEADERS]/QtCore/$$[QT_VERSION]/
+}
+
+

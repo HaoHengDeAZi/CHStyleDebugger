@@ -9,6 +9,7 @@
 
 #include <QMap>
 #include <QWidget>
+#include <QPointer>
 #include <QEventLoop>
 #include <QListWidgetItem>
 
@@ -32,8 +33,8 @@ public:
     int count();
 
 Q_SIGNALS:
-    void selectedWidget(QWidget* widget);
-    void hoveredWidget(QWidget* widget);
+    void selectedWidget(QPointer<QWidget> widget);
+    void hoveredWidget(QPointer<QWidget> widget);
 
 protected:
     void hideEvent(QHideEvent *event) override;
@@ -45,9 +46,9 @@ private:
     Ui::ObjectInfoMenu *ui;
 
     QEventLoop eventLoop;
-    QWidget* m_currentWidget;
-    QWidget* m_selectWidget;
-    QMap<CHPushButton*, QWidget*> m_itemWidget;
+    QPointer<QWidget> m_currentWidget;
+    QPointer<QWidget> m_selectWidget;
+    QMap<CHPushButton*, QPointer<QWidget>> m_itemWidget;
 };
 
 #endif // OBJECTINFOMENU_H

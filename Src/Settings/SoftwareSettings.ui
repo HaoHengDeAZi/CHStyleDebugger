@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>545</width>
-    <height>256</height>
+    <height>344</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -204,10 +204,10 @@
       <property name="horizontalSpacing">
        <number>0</number>
       </property>
-      <item row="0" column="0">
-       <widget class="QLabel" name="label_7">
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="ledPropertyShortcut">
         <property name="text">
-         <string>主窗口快捷键</string>
+         <string>ALT+1</string>
         </property>
        </widget>
       </item>
@@ -215,20 +215,6 @@
        <widget class="QLineEdit" name="ledMainShortcut">
         <property name="text">
          <string>ALT+0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label_11">
-        <property name="text">
-         <string>对象选择框粗细</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QLineEdit" name="ledQssEditorShortcut">
-        <property name="text">
-         <string>ALT+2</string>
         </property>
        </widget>
       </item>
@@ -271,6 +257,27 @@
         </item>
        </layout>
       </item>
+      <item row="3" column="3" colspan="2">
+       <widget class="QCheckBox" name="cbMainWindow">
+        <property name="text">
+         <string>启动时显示软件主窗口</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QCheckBox" name="cbTrayIcon">
+        <property name="text">
+         <string>显示右下角软件图标</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="ledQssEditorShortcut">
+        <property name="text">
+         <string>ALT+2</string>
+        </property>
+       </widget>
+      </item>
       <item row="2" column="3">
        <widget class="QLabel" name="label_12">
         <property name="text">
@@ -278,12 +285,39 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="ledPropertyShortcut">
+      <item row="2" column="4">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLineEdit" name="ledObjectKeyShortcut">
+          <property name="text">
+           <string>CTRL+B</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>ALT+1</string>
+         <string>属性面板快捷键</string>
         </property>
        </widget>
+      </item>
+      <item row="2" column="2">
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_9">
@@ -292,17 +326,17 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_10">
+      <item row="1" column="3">
+       <widget class="QLabel" name="label_11">
         <property name="text">
-         <string>对象选择框颜色</string>
+         <string>对象选择框粗细</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_8">
+      <item row="0" column="0">
+       <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>属性面板快捷键</string>
+         <string>主窗口快捷键</string>
         </property>
        </widget>
       </item>
@@ -319,18 +353,12 @@
         </property>
        </spacer>
       </item>
-      <item row="2" column="2">
-       <spacer name="horizontalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+      <item row="0" column="3">
+       <widget class="QLabel" name="label_10">
+        <property name="text">
+         <string>对象选择框颜色</string>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
       <item row="0" column="2">
        <spacer name="horizontalSpacer_4">
@@ -344,20 +372,6 @@
          </size>
         </property>
        </spacer>
-      </item>
-      <item row="2" column="4">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QLineEdit" name="ledObjectKeyShortcut">
-          <property name="text">
-           <string>CTRL+B</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
       </item>
       <item row="1" column="4">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -398,17 +412,17 @@
         </item>
        </layout>
       </item>
-      <item row="3" column="0" colspan="2">
-       <widget class="QCheckBox" name="cbTrayIcon">
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="cbFpsMain">
         <property name="text">
-         <string>显示右下角软件图标</string>
+         <string>显示刷新率</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="3" colspan="2">
-       <widget class="QCheckBox" name="cbMainWindow">
+      <item row="4" column="3">
+       <widget class="QCheckBox" name="cbFpsSelect">
         <property name="text">
-         <string>启动时显示软件主窗口</string>
+         <string>显示选中控件刷新率</string>
         </property>
        </widget>
       </item>

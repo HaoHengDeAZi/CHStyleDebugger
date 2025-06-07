@@ -11,6 +11,7 @@
 #include "ConvertQtTypee.h"
 #include <QDebug>
 #include <QDesktopWidget>
+#include <QtWidgets>
 
 CPropertyPanel::CPropertyPanel(QWidget *parent) :
     QWidget(parent),
@@ -46,7 +47,6 @@ void CPropertyPanel::setWidget(QWidget *pW)
         return;
     }
 
-    hide();
     //销毁的时候清空
     connect(pW, &QWidget::destroyed, this, [this]()
     {
@@ -59,7 +59,7 @@ void CPropertyPanel::setWidget(QWidget *pW)
     QObject* target = pW;
     //窗口名称
     QString strClassName = QString::fromLatin1(pW->metaObject()->className());
-    setWindowTitle(QString(tr("ClassName：%1，ObjectName：%2").arg(pW->objectName()).arg(strClassName)));
+    setWindowTitle(QString(tr("ClassName：%1，ObjectName：%2").arg(strClassName).arg(pW->objectName())));
 
     QStringList lsColor;
     lsColor << "#FFFFDE" << "#FFDEDE" << "#FFE6BF";
@@ -149,6 +149,19 @@ void CPropertyPanel::setWidget(QWidget *pW)
             break;
         }
 
+        case QVariant::Double: {
+            QLineEdit* p = new QLineEdit(pProInfo);
+            QDoubleValidator* pDoubleVld = new QDoubleValidator(pProInfo);
+            p->setValidator(pDoubleVld);
+            p->setText(mp.read(pW).toString());
+            ly->addWidget(p);
+            connect(p, &QLineEdit::editingFinished, pW, [pW, p, pLblName, this]()
+            {
+                changedInfo(pW, pLblName->text(), p->text().trimmed());
+            }, Qt::UniqueConnection);
+            break;
+        }
+
         case QVariant::String:
         {
             QLineEdit* p = new QLineEdit(pProInfo);
@@ -219,10 +232,164 @@ void CPropertyPanel::setWidget(QWidget *pW)
             break;
         }
 
-        case QVariant::SizePolicy:
+        case QVariant::Color:
         {
+            QColor color = QColor(mp.read(pW).toString());
+            QWidget* wColor = new QWidget(pProInfo);
+            QHBoxLayout* hlayColor = new QHBoxLayout(wColor);
+            hlayColor->setContentsMargins(0, 0, 0, 0);
+            hlayColor->setSpacing(10);
+            QPushButton* bgColor = new QPushButton(wColor);
+            bgColor->setCursor(Qt::PointingHandCursor);
+            bgColor->setFixedSize(20, 20);
+            bgColor->setStyleSheet(QString("QPushButton, QPushButton:pressed, QPushButton:hover {background-color:%1}").arg(color.name(QColor::HexArgb)));
+            hlayColor->addWidget(bgColor);
+
+            QLineEdit* p = new QLineEdit(pProInfo);
+            p->setText(color2String(color));
+            connect(p, &QLineEdit::editingFinished, pW, [pW, p, pLblName, bgColor, this]()
+            {
+                QColor c = string2Color(p->text().trimmed());
+                changedInfo(pW, pLblName->text(), c);
+                bgColor->setStyleSheet(QString("QPushButton, QPushButton:pressed, QPushButton:hover {background-color:%1}").arg(c.name(QColor::HexArgb)));
+            }, Qt::UniqueConnection);
+
+            connect(bgColor, &QPushButton::clicked, pW, [pW, p, pLblName, bgColor, this](){
+                QColor c = string2Color(p->text().trimmed());
+                QColor selectColor = QColorDialog::getColor(c, pW, "wakuwaku 颜色", QColorDialog::ShowAlphaChannel);
+                if (!selectColor.isValid()) {
+                    return;
+                }
+                changedInfo(pW, pLblName->text(), selectColor);
+                p->setText(color2String(selectColor));
+                bgColor->setStyleSheet(QString("QPushButton, QPushButton:pressed, QPushButton:hover {background-color:%1}").arg(selectColor.name(QColor::HexArgb)));
+            }, Qt::UniqueConnection);
+
+            hlayColor->addWidget(p);
+
+            ly->addWidget(wColor);
             break;
         }
+
+        case QVariant::Font:
+        {
+            QFont font = mp.read(pW).value<QFont>();
+            QLineEdit* p = new QLineEdit(pProInfo);
+            p->setText(font.toString());
+            p->setReadOnly(true);
+            ly->addWidget(p);
+            QPushButton* button = new QPushButton(pProInfo);
+            button->setText("...");
+            ly->addWidget(button);
+            connect(button, &QPushButton::clicked, pW, [pW, p, pLblName, mp, this]() {
+                QFont font = mp.read(pW).value<QFont>();
+                bool ok = false;
+                QFont selectFont = QFontDialog::getFont(&ok, font, pW);
+                if (!ok) {
+                    return;
+                }
+                changedInfo(pW, pLblName->text(), selectFont);
+                p->setText(selectFont.toString());
+            }, Qt::UniqueConnection);
+            break;
+        }
+
+        case QVariant::SizePolicy:
+        {
+            QSizePolicy sp = mp.read(pW).value<QSizePolicy>();
+            QLabel* label = new QLabel(pProInfo);
+            label->setText("HP,VP,HS,VS:");
+            label->setToolTip("HorizontalPolicy, VerticalPolicy, HorizontalStretch,VericalStretch");
+            ly->addWidget(label);
+            QComboBox* comBoxH = new QComboBox(pProInfo);
+            QComboBox* comBoxV = new QComboBox(pProInfo);
+            comBoxH->setMaximumWidth(65);
+            comBoxV->setMaximumWidth(65);
+            QMetaEnum metaEnum = QMetaEnum::fromType<QSizePolicy::Policy>();
+            QStringList lsKeys;
+            for (int i = 0; i < metaEnum.keyCount(); i++)
+            {
+                lsKeys.append(metaEnum.key(i));
+            }
+            comBoxH->addItems(lsKeys);
+            comBoxV->addItems(lsKeys);
+            comBoxH->setCurrentText(metaEnum.valueToKey(sp.horizontalPolicy()));
+            comBoxV->setCurrentText(metaEnum.valueToKey(sp.verticalPolicy()));
+
+            ly->addWidget(comBoxH);
+            ly->addWidget(comBoxV);
+
+            QLineEdit* p = new QLineEdit(pProInfo);
+            p->setText(size2String(QSize(sp.horizontalStretch(), sp.verticalStretch())));
+            ly->addWidget(p);
+            auto refresh = [pW,  comBoxH, comBoxV, mp, metaEnum, pLblName, p, this]()
+            {
+                QSizePolicy sp = mp.read(pW).value<QSizePolicy>();
+                sp.setHorizontalPolicy((QSizePolicy::Policy)metaEnum.keyToValue(comBoxH->currentText().toLocal8Bit().data()));
+                sp.setVerticalPolicy((QSizePolicy::Policy)metaEnum.keyToValue(comBoxV->currentText().toLocal8Bit().data()));
+                QSize size = string2Size(p->text());
+                sp.setHorizontalStretch(size.width());
+                sp.setVerticalStretch(size.height());
+                changedInfo(pW, pLblName->text(), sp);
+            };
+
+            connect(comBoxH, &QComboBox::currentTextChanged, pW, refresh, Qt::UniqueConnection);
+            connect(comBoxV, &QComboBox::currentTextChanged, pW, refresh, Qt::UniqueConnection);
+            connect(p, &QLineEdit::editingFinished, pW, refresh, Qt::UniqueConnection);
+            break;
+        }
+
+        case QVariant::Cursor: {
+            QCursor cursor = mp.read(pW).value<QCursor>();
+            QMetaEnum me = QMetaEnum::fromType<Qt::CursorShape>();
+
+            QStringList lsEnum;
+            int nCount = me.keyCount();
+            for (int i = 0; i < nCount; i++)
+            {
+                lsEnum.append(me.key(i));
+            }
+            QComboBox* p = new QComboBox(pProInfo);
+            p->addItems(lsEnum);
+            p->setCurrentText(me.valueToKey(cursor.shape()));
+            ly->addWidget(p);
+            connect(p, &QComboBox::currentTextChanged, pW, [pW, p, pLblName, this, me, &cursor]()
+            {
+                int nValue = me.keyToValue(p->currentText().toLocal8Bit().data());
+                cursor.setShape((Qt::CursorShape)nValue);
+                pW->setCursor(cursor);
+            }, Qt::UniqueConnection);
+            break;
+        }
+
+        case QVariant::Icon: {
+            QIcon icon = mp.read(pW).value<QIcon>();
+            QLabel* p = new QLabel(pProInfo);
+            p->setPixmap(icon.pixmap(24, 24));
+            ly->addWidget(p);
+            break;
+        }
+
+        case QVariant::Locale: {
+            QLocale locale = mp.read(pW).value<QLocale>();
+            QLabel* p = new QLabel(pProInfo);
+            p->setText(locale.name() + " " + locale.nativeLanguageName());
+            ly->addWidget(p);
+            break;
+        }
+
+        case QVariant::KeySequence: {
+            QKeySequence keySequence = mp.read(pW).value<QKeySequence>();
+            QLabel* p = new QLabel(pProInfo);
+            p->setText(keySequence.toString());
+            ly->addWidget(p);
+            break;
+        }
+//        case QVariant::Palette: {
+//            QPalette palette = mp.read(pW).value<QPalette>();
+//            qDebug() << palette;
+//            break;
+//        }
 
         default:
         {
@@ -322,13 +489,22 @@ void CPropertyPanel::setWidget(QWidget *pW)
                 ly->setContentsMargins(6, 2, 3, 2);
                 pLayoutInfo->setLayout(ly);
                 QLabel* pLblName = new QLabel(pLayoutInfo);
-                pLblName->setText("spacing");
                 pLblName->setFixedWidth(145);
                 ly->addWidget(pLblName);
                 QLineEdit* p = new QLineEdit(pLayoutInfo);
-                p->setText(QString::number(layout->spacing()));
-                QIntValidator* pIntVld = new QIntValidator(this);
-                p->setValidator(pIntVld);
+                if (layout->inherits("QGridLayout")) {
+                    QGridLayout* gridLayout = qobject_cast<QGridLayout*>(layout);
+                    p->setText(QString::number(gridLayout->horizontalSpacing())+ "," + QString::number(gridLayout->verticalSpacing()));
+                    pLblName->setText("spacing(水平,垂直)");
+                } else if (layout->inherits("QFormLayout")) {
+                    QFormLayout* formLayout = qobject_cast<QFormLayout*>(layout);
+                    p->setText(QString::number(formLayout->horizontalSpacing())+ "," + QString::number(formLayout->verticalSpacing()));
+                    pLblName->setText("spacing(水平,垂直)");
+
+                } else {
+                    p->setText(QString::number(layout->spacing()));
+                    pLblName->setText("spacing");
+                }
                 connect(p, &QLineEdit::editingFinished, layout, [layout, pW, p, this]()
                 {
                     m_mapObjectLayout.insert(pW, layout);
@@ -336,7 +512,24 @@ void CPropertyPanel::setWidget(QWidget *pW)
                     {
                         m_mapObjectValues.insert(pW, QList<ST_PROPERTY>());
                     }
-                    layout->setSpacing(p->text().trimmed().toInt());
+                    if (layout->inherits("QGridLayout")) {
+                        QGridLayout* gridLayout = qobject_cast<QGridLayout*>(layout);
+                        QStringList spaces = p->text().trimmed().split(",");
+                        if (spaces.length() == 2) {
+                            gridLayout->setHorizontalSpacing(spaces.first().toInt());
+                            gridLayout->setVerticalSpacing(spaces.last().toInt());
+                        }
+                    } else if (layout->inherits("QFormLayout")) {
+                        QFormLayout* formLayout = qobject_cast<QFormLayout*>(layout);
+                        QStringList spaces = p->text().trimmed().split(",");
+                        if (spaces.length() == 2) {
+                            formLayout->setHorizontalSpacing(spaces.first().toInt());
+                            formLayout->setVerticalSpacing(spaces.last().toInt());
+                        }
+                    } else {
+                        layout->setSpacing(p->text().trimmed().toInt());
+                    }
+
                     printLog();
                 }, Qt::UniqueConnection);
                 ly->addWidget(p);
@@ -395,7 +588,7 @@ void CPropertyPanel::setWidget(QWidget *pW)
                     ly->addWidget(comBoxH);
                     ly->addWidget(comBoxV);
 
-                    static auto refreshSpacerItem = [layout, pW, p, comBoxH, comBoxV, pSpacerItem, metaEnum, this]()
+                    auto refreshSpacerItem = [layout, pW, p, comBoxH, comBoxV, pSpacerItem, metaEnum, this]()
                     {
                         m_mapObjectLayout.insert(pW, layout);
                         if (!m_mapObjectValues.contains(pW))
@@ -597,25 +790,35 @@ void CPropertyPanel::on_btnAdjustSize_clicked()
     }
 
     //自适应大小
-    while (m_pTarget != Q_NULLPTR) {
-        m_pTarget->adjustSize();
-        m_pTarget = m_pTarget->parentWidget();
-    }
+    m_pTarget->adjustSize();
 }
 
 void CPropertyPanel::initWidget()
 {
     setStyleSheet("");
     setWindowTitle(QString("属性面板"));
-
     //setAttribute(Qt::WA_TranslucentBackground);
     //设置窗口模态,消息就不会被堵塞了!
-    setWindowModality(Qt::WindowModal);
-    setAttribute(Qt::WA_ShowWithoutActivating);
     setWindowFlags(Qt::Tool | Qt::WindowStaysOnTopHint);
     //setWindowFlag(Qt::WindowCloseButtonHint, false);
     setWindowOpacity(1.0);
-    ui->btnAdjustSize->hide();
+
+    ui->btnRefreshList->setIcon(QApplication::style()->standardIcon(QStyle::SP_BrowserReload));
+    connect(ui->btnRefreshList, &QPushButton::clicked, this, [=]() {
+        if (m_pTarget == Q_NULLPTR)
+        {
+            return;
+        }
+        setWidget(m_pTarget);
+    });
+
+    auto settings = appContext->settings();
+    ui->chbObjectVisible->setChecked(settings.objectBorderVisible);
+    connect(ui->chbObjectVisible, &QCheckBox::toggled, this, [=](){
+        auto settings = appContext->settings();
+        settings.objectBorderVisible = ui->chbObjectVisible->isChecked();
+        appContext->setSettings(settings);
+    });
 
     //还原自己
     QString strSelfQss = appContext->getSelfQssInfo();

@@ -29,6 +29,11 @@ QMAKE_CXXFLAGS_RELEASE = $$QMAKE_CXXFLAGS_RELEASE_WITH_DEBUGINFO
 QMAKE_CFLAGS_RELEASE = $$QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO
 QMAKE_LFLAGS_RELEASE = $$QMAKE_LFLAGS_RELEASE_WITH_DEBUGINFO
 
+#Macx编译ARM版本是需要定义架构
+macx:contains(QT_ARCH, arm64) {
+    QMAKE_APPLE_DEVICE_ARCHS=arm64
+}
+
 # 平台信息
 win32:contains(QT_ARCH, i386) {
     PLATFORM = Windows
@@ -61,6 +66,7 @@ unix:!macx:contains(QT_ARCH, aarch64) {
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
+
 
 # 附加库目录
 LIBS += -L$$sprintf($$PWD/../Depends/Bin_%1_%2, $$PLATFORM, $$ARCHITECTURE)
